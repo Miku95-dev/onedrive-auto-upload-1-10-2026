@@ -1,1 +1,29 @@
+name: Send File to OneDrive
 
+on:
+  schedule:
+    - cron: '0 10 * * 3'  # Thứ Tư hàng tuần lúc 10h sáng UTC
+  workflow_dispatch:
+
+jobs:
+  send_to_onedrive:
+    runs-on: ubuntu-latest
+    env:
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+      TENANT_ID: ${{ secrets.TENANT_ID }}
+      USER_EMAIL: ${{ secrets.USER_EMAIL }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests python-dotenv
+
+      - name: Run OneDrive upload script
+        run: python send_onedrive.py
